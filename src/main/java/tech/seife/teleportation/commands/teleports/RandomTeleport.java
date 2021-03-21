@@ -63,9 +63,6 @@ public class RandomTeleport implements CommandExecutor {
         }
 
         Block ground = feet.getRelative(BlockFace.DOWN);
-        if (!ground.getType().isSolid()) {
-            return false;
-        }
-        return true;
+        return ground.getType().isSolid();
     }
 }

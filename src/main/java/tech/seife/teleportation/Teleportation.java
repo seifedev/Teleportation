@@ -1,22 +1,17 @@
 package tech.seife.teleportation;
 
-import io.github.seifedeveloper.teleportation.commands.homes.*;
-import tech.seife.teleportation.commands.requeststeleports.RequestTeleportHere;
-import tech.seife.teleportation.commands.requeststeleports.RequestTeleportThere;
-import io.github.seifedeveloper.teleportation.commands.teleports.*;
-import io.github.seifedeveloper.teleportation.commands.warps.*;
-import io.github.seifedeveloper.teleportation.datamanager.*;
-import io.github.seifedeveloper.teleportation.events.*;
-import tech.seife.teleportation.commands.teleports.*;
-import tech.seife.teleportation.commands.warps.*;
-import tech.seife.teleportation.datamanager.*;
-import tech.seife.teleportation.requestteleport.RequesterTeleportManager;
-import tech.seife.teleportation.signs.SignManager;
-import tech.seife.teleportation.warps.WarpManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import tech.seife.teleportation.commands.homes.*;
+import tech.seife.teleportation.commands.requeststeleports.RequestTeleportHere;
+import tech.seife.teleportation.commands.requeststeleports.RequestTeleportThere;
+import tech.seife.teleportation.commands.teleports.*;
+import tech.seife.teleportation.commands.warps.*;
+import tech.seife.teleportation.datamanager.*;
 import tech.seife.teleportation.events.*;
+import tech.seife.teleportation.requestteleport.RequesterTeleportManager;
+import tech.seife.teleportation.signs.SignManager;
+import tech.seife.teleportation.warps.WarpManager;
 
 public final class Teleportation extends JavaPlugin {
 

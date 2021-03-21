@@ -394,7 +394,6 @@ public class HandleDatabaseData implements HandleData {
             ps.setInt(1, saveLocationAndGetId(location, connection));
 
             connection.setAutoCommit(true);
-            ;
 
             ps.executeUpdate();
 
@@ -455,7 +454,6 @@ public class HandleDatabaseData implements HandleData {
             ps.setInt(2, locationToTeleportId);
 
             connection.setAutoCommit(true);
-            ;
 
             ps.executeUpdate();
 
@@ -518,7 +516,6 @@ public class HandleDatabaseData implements HandleData {
             ps.setInt(3, linkedLocationId);
 
             connection.setAutoCommit(true);
-            ;
 
             ps.executeUpdate();
 

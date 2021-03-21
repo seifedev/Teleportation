@@ -11,26 +11,27 @@ import java.sql.SQLException;
 public class ConnectionPoolManager {
 
     private final Configuration config;
-
+    public Connection connection;
     private HikariDataSource dataSource;
-
     private String hostname;
     private String port;
     private String database;
     private String username;
     private String password;
-
     private int minimumConnections;
     private int maximumConnections;
     private int connectionsTimeout;
     private int idleTimeout;
-
     private boolean secureConnection;
 
     public ConnectionPoolManager(FileConfiguration config) {
         this.config = config;
         initialize();
         poolSetup();
+    }
+
+    public Connection getConnection() throws SQLException {
+        return dataSource.getConnection();
     }
 
     private void initialize() {
@@ -66,9 +67,5 @@ public class ConnectionPoolManager {
         config.addDataSourceProperty("verifyServerCertificate", secureConnection);
         config.addDataSourceProperty("foreign_keys", "true");
         dataSource = new HikariDataSource(config);
-    }
-
-    public Connect ion getConnection() throws SQLException {
-        return dataSource.getConnection();
     }
 }

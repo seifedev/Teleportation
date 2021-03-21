@@ -30,9 +30,7 @@ public final class SignManager {
     public boolean isValidSign(String[] lines) {
         if (lines[0] != null && lines[0].equalsIgnoreCase("[Teleportation]")) {
             if (lines[1] != null && lines[1].equalsIgnoreCase("warp")) {
-                if (lines[3] != null && warpManager.getWarp(lines[3]) != null) {
-                    return true;
-                }
+                return lines[3] != null && warpManager.getWarp(lines[3]) != null;
             }
         }
         return false;

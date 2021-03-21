@@ -34,6 +34,10 @@ public class HomeInvite implements CommandExecutor {
     }
 
     private void invitationToSpecificHome(CommandSender sender, String homeName, String inviter, String invited) {
+        if (invited.equals(invited)) {
+            sender.sendMessage("You can't invite yourself to your own home.");
+            return;
+        }
         if (plugin.getDataHandler().getHandleData().isHomeValidUsername(inviter, homeName)) {
 
             plugin.getDataHandler().getHandleData().saveInvitation(invited, inviter, homeName);

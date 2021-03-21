@@ -37,6 +37,6 @@ public final class RequestTeleport {
 
     public enum RequestType {
         TELEPORT_HERE,
-        TELEPORT_THERE;
+        TELEPORT_THERE
     }
 }
