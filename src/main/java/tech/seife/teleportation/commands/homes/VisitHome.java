@@ -1,13 +1,16 @@
 package tech.seife.teleportation.commands.homes;
 
+import tech.seife.teleportation.MessageManager;
 import tech.seife.teleportation.Teleportation;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import tech.seife.teleportation.enums.ReplaceType;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class VisitHome implements CommandExecutor {
@@ -26,7 +29,12 @@ public class VisitHome implements CommandExecutor {
                 UUID inviter = Bukkit.getPlayer(args[0]).getUniqueId();
                 if (plugin.getDataHandler().getHandleData().isValidInvitation(invited, inviter, args[1])) {
                     Bukkit.getPlayer(invited).teleport(plugin.getDataHandler().getHandleData().getHomeUuid(inviter, args[1]).getLocation());
-                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getMessageManager().replaceHomeName(plugin.getConfig().getString("homeVisit"), plugin.getDataHandler().getHandleData().getHomeUuid(inviter, args[1]).getHomeName())));
+
+                    Map<ReplaceType, String> values = new HashMap<>();
+
+                    values.put(ReplaceType.HOME_NAME, args[1]);
+
+                    sender.sendMessage(MessageManager.getTranslatedMessageWithReplace(plugin, "homeVisit", values));
                 }
             }
         }

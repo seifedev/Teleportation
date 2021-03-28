@@ -1,5 +1,6 @@
 package tech.seife.teleportation.commands.teleports;
 
+import tech.seife.teleportation.MessageManager;
 import tech.seife.teleportation.Teleportation;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -26,6 +27,8 @@ public class SetSpawn implements CommandExecutor {
 
             plugin.getDataHandler().getHandleData().saveSpawnLocation(location);
             plugin.getDataHolder().setSpawnLocation(location);
+
+            sender.sendMessage(MessageManager.getTranslatedMessage(plugin, "setSpawn"));
         }
         return true;
     }

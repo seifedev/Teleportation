@@ -24,9 +24,9 @@ public class ReturnBack implements CommandExecutor {
                 Location location = getLocation(player);
                 teleport(player, location);
                 plugin.getDataHolder().getReturnLocations().get(player.getUniqueId()).remove(location);
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("backMessage")));
+                player.sendMessage(plugin.getFileManager().getTranslationConfig().getString("previousLocation"));
             } else {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("noPreviousLocation")));
+                player.sendMessage(plugin.getFileManager().getTranslationConfig().getString("previousLocationNotFound"));
             }
             return true;
         }

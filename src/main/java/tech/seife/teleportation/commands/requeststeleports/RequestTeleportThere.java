@@ -28,14 +28,10 @@ public final class RequestTeleportThere implements CommandExecutor {
             if (Bukkit.getPlayer(args[0]) != null) {
                 requesterTeleportManager.addRequest(((Player) sender).getUniqueId(), Bukkit.getPlayer(args[0]).getUniqueId(), RequestTeleport.RequestType.TELEPORT_THERE);
 
-                sendMessages(((Player) sender), Bukkit.getPlayer(args[0]));
+                requesterTeleportManager.sendMessages(((Player) sender).getPlayer(), Bukkit.getPlayer(args[0]), "tpaRequest", "sendHere");
             }
         }
         return true;
     }
 
-    private void sendMessages(Player requester, Player receiver) {
-        receiver.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getMessageManager().replacePlayerName(Objects.requireNonNull(plugin.getConfig().getString("tpaRequest")), requester.getName())));
-        requester.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getMessageManager().replacePlayerName(Objects.requireNonNull(plugin.getConfig().getString("tpaRequestConfirm")), receiver.getName())));
-    }
 }

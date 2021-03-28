@@ -1,14 +1,15 @@
 package tech.seife.teleportation.requestteleport;
 
-import tech.seife.teleportation.Teleportation;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.Configuration;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
+import tech.seife.teleportation.MessageManager;
+import tech.seife.teleportation.Teleportation;
+import tech.seife.teleportation.enums.ReplaceType;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public final class RequesterTeleportManager {
 
@@ -49,6 +50,20 @@ public final class RequesterTeleportManager {
                 .orElse(null);
 
     }
+
+    public void sendMessages(Player requester, Player receiver, String receiverPath, String senderPath) {
+
+        Map<ReplaceType, String> values = new HashMap<>();
+
+        values.put(ReplaceType.PLAYER_NAME, requester.getName());
+
+        receiver.sendMessage(MessageManager.getTranslatedMessageWithReplace(plugin, receiverPath, values));
+
+        values.put(ReplaceType.PLAYER_NAME, receiver.getName());
+
+        requester.sendMessage(MessageManager.getTranslatedMessageWithReplace(plugin, senderPath, values));
+    }
+
 
     public BukkitTask getBukkitScheduler() {
         return bukkitScheduler;

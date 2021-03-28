@@ -1,4 +1,4 @@
-package tech.seife.teleportation.datamanager;
+package tech.seife.teleportation.datamanager.dao;
 
 import tech.seife.teleportation.homes.Home;
 import tech.seife.teleportation.signs.Sign;
@@ -14,7 +14,7 @@ public interface HandleData {
 
     boolean isHomeValidUsername(String owner, String homeName);
 
-    Home getHomeUuid(UUID owner, String homeName);
+    Home    getHomeUuid(UUID owner, String homeName);
 
     void saveHome(Home home);
 
@@ -53,6 +53,8 @@ public interface HandleData {
     void savePortals(String name, Location portalLocation, Location linkedLocation);
 
     void removePortal(String portalName);
+
+    boolean doesPortalExist(String portalName);
 
     void loadPortals();
 

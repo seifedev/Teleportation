@@ -47,7 +47,6 @@ public final class TpaSubCommands implements CommandExecutor {
 
     private void requestTeleport(Player sender, String arg) {
         requesterTeleportManager.addRequest(sender.getUniqueId(), Bukkit.getPlayer(arg).getUniqueId(), RequestTeleport.RequestType.TELEPORT_THERE);
-        sendTeleportRequestMessages(sender, Bukkit.getPlayer(arg));
     }
 
     private void cancelTeleportRequest(Player sender) {
@@ -68,21 +67,16 @@ public final class TpaSubCommands implements CommandExecutor {
         }
     }
 
-    private void sendTeleportRequestMessages(Player requester, Player receiver) {
-        receiver.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getMessageManager().replacePlayerName(Objects.requireNonNull(plugin.getConfig().getString("tpaRequest")), requester.getName())));
-        requester.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getMessageManager().replacePlayerName(Objects.requireNonNull(plugin.getConfig().getString("tpaRequestConfirm")), receiver.getName())));
-    }
+
 
 
     private void sendDenyMessages(UUID requestSenderUuid, UUID requestReceiverUuid) {
-        Bukkit.getPlayer(requestReceiverUuid).sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("tpaCancelled")));
-        Bukkit.getPlayer(requestSenderUuid).sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("tpaCancelled")));
+        requesterTeleportManager.sendMessages(Bukkit.getPlayer(requestSenderUuid).getPlayer(), Bukkit.getPlayer(requestSenderUuid).getPlayer(), "cancelledTpaSender", "cancelledTpaReceiver");
     }
 
 
     private void sendAcceptMessage(UUID firstPlayer, UUID secondPlayer) {
-        Bukkit.getPlayer(firstPlayer).sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("tpaSuccess")));
-        Bukkit.getPlayer(secondPlayer).sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("tpaSuccess")));
+        requesterTeleportManager.sendMessages(Bukkit.getPlayer(firstPlayer).getPlayer(), Bukkit.getPlayer(secondPlayer).getPlayer(), "tpaSuccessSender", "tpaSuccessReceiver");
     }
 
 }

@@ -1,13 +1,18 @@
 package tech.seife.teleportation.commands.warps;
 
-import tech.seife.teleportation.Teleportation;
-import tech.seife.teleportation.inventories.VerifyInventory;
-import tech.seife.teleportation.warps.Warp;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import tech.seife.teleportation.MessageManager;
+import tech.seife.teleportation.Teleportation;
+import tech.seife.teleportation.enums.ReplaceType;
+import tech.seife.teleportation.inventories.VerifyInventory;
+import tech.seife.teleportation.warps.Warp;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class DeleteWarp implements CommandExecutor {
 
@@ -25,9 +30,12 @@ public class DeleteWarp implements CommandExecutor {
             if (plugin.getWarpManager().getWarp(args[0]) != null) {
                 Warp warp = plugin.getWarpManager().getWarp(args[0]);
                 deleteWrap(((Player) sender), warp);
-                if (plugin.getMessageManager() != null && plugin.getConfig().getString("warpDelete") != null) {
-                    sender.sendMessage(plugin.getMessageManager().replaceWarpPoint(plugin.getConfig().getString("warpDelete"), warp.getLocation(), warp.getName()));
-                }
+
+                Map<ReplaceType, String> values = new HashMap<>();
+
+                values.put(ReplaceType.WARP_NAME, warp.getName());
+
+                sender.sendMessage(MessageManager.getTranslatedMessageWithReplace(plugin, "warpDeleted", values));
                 return true;
             }
         }

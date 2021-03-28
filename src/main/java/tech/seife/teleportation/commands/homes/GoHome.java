@@ -1,14 +1,16 @@
 package tech.seife.teleportation.commands.homes;
 
-import tech.seife.teleportation.Teleportation;
-import tech.seife.teleportation.homes.Home;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import tech.seife.teleportation.MessageManager;
+import tech.seife.teleportation.Teleportation;
+import tech.seife.teleportation.enums.ReplaceType;
+import tech.seife.teleportation.homes.Home;
 
-import java.util.Objects;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GoHome implements CommandExecutor {
 
@@ -36,10 +38,10 @@ public class GoHome implements CommandExecutor {
     private void teleportToSpecificHome(CommandSender sender, String homeName, Player player) {
         if (plugin.getDataHandler().getHandleData().isHomeValidUuid(player.getUniqueId(), homeName)) {
             Home home = plugin.getDataHandler().getHandleData().getHomeUuid(player.getUniqueId(), homeName);
-            sender.sendMessage(home.getHomeName());
+
             teleport(sender, player, home);
         } else {
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getMessageManager().replaceHomeName(Objects.requireNonNull(plugin.getConfig().getString("homeNotFound")), homeName)));
+            homeNotFound(sender, homeName, "homeNotFound");
         }
     }
 
@@ -48,12 +50,29 @@ public class GoHome implements CommandExecutor {
             Home home = plugin.getDataHandler().getHandleData().getHomeUuid(player.getUniqueId(), "home");
             teleport(sender, player, home);
         } else {
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getMessageManager().replaceHomeName(Objects.requireNonNull(plugin.getConfig().getString("homeNotFound")), "default home")));
+            homeNotFound(sender, "home", "homeNotFound");
         }
+    }
+
+    private void homeNotFound(CommandSender sender, String home, String path) {
+        Map<ReplaceType, String> values = new HashMap<>();
+
+        values.put(ReplaceType.HOME_NAME, home);
+
+        sendMessage(sender, values, path);
     }
 
     private void teleport(CommandSender sender, Player player, Home home) {
         player.teleport(home.getLocation());
-        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getMessageManager().replaceHomeName(Objects.requireNonNull(plugin.getConfig().getString("homeMessage")), home.getHomeName())));
+
+        Map<ReplaceType, String> values = new HashMap<>();
+
+        values.put(ReplaceType.HOME_NAME, home.getHomeName());
+
+        sendMessage(sender, values, "home");
+    }
+
+    private void sendMessage(CommandSender sender, Map<ReplaceType, String> values, String path) {
+        sender.sendMessage(MessageManager.getTranslatedMessageWithReplace(plugin, path, values));
     }
 }

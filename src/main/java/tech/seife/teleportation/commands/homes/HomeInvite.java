@@ -1,14 +1,16 @@
 package tech.seife.teleportation.commands.homes;
 
-import tech.seife.teleportation.Teleportation;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import tech.seife.teleportation.MessageManager;
+import tech.seife.teleportation.Teleportation;
+import tech.seife.teleportation.enums.ReplaceType;
 
-import java.util.Objects;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HomeInvite implements CommandExecutor {
 
@@ -41,8 +43,17 @@ public class HomeInvite implements CommandExecutor {
         if (plugin.getDataHandler().getHandleData().isHomeValidUsername(inviter, homeName)) {
 
             plugin.getDataHandler().getHandleData().saveInvitation(invited, inviter, homeName);
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getMessageManager().replacePlayerName(Objects.requireNonNull(plugin.getConfig().getString("homeInvitationSender")), homeName)));
-            Bukkit.getPlayer(invited).sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getMessageManager().replacePlayerName(Objects.requireNonNull(plugin.getConfig().getString("invitation")), homeName)));
+
+            Map<ReplaceType, String> values = new HashMap<>();
+
+            values.put(ReplaceType.PLAYER_NAME, invited);
+            values.put(ReplaceType.HOME_NAME, homeName);
+
+            sender.sendMessage(MessageManager.getTranslatedMessageWithReplace(plugin, "invitedToHome", values));
+
+            values.put(ReplaceType.PLAYER_NAME, inviter);
+
+            Bukkit.getPlayer(invited).sendMessage(MessageManager.getTranslatedMessageWithReplace(plugin, "invitePlayer", values));
         }
     }
 }

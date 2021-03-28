@@ -1,11 +1,11 @@
-package tech.seife.teleportation.datamanager;
+package tech.seife.teleportation.datamanager.dao;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import tech.seife.teleportation.Teleportation;
 import tech.seife.teleportation.homes.Home;
 import tech.seife.teleportation.signs.Sign;
 import tech.seife.teleportation.warps.Warp;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -582,6 +582,24 @@ public class HandleDatabaseData implements HandleData {
         return null;
     }
 
+    @Override
+    public boolean doesPortalExist(String portalName) {
+        String sqlQuery = "SELECT * FROM locations WHERE name = ?;";
+
+        try (Connection connection = plugin.getConnectionPoolManager().getConnection();
+             PreparedStatement ps = connection.prepareStatement(sqlQuery)) {
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return true;
+            }
+
+        } catch (SQLException e) {
+            plugin.getLogger().log(Level.WARNING, "Failed to load location from id!\nError message: " + e.getMessage());
+        }
+        return false;
+    }
 
     private Location getLocationFromResultSet(ResultSet rs) throws SQLException {
         return new Location(Bukkit.getWorld(rs.getString("world")), rs.getDouble("x"), rs.getDouble("y"), rs.getDouble("z"));

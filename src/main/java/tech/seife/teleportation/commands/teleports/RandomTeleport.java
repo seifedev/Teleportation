@@ -1,5 +1,6 @@
 package tech.seife.teleportation.commands.teleports;
 
+import tech.seife.teleportation.MessageManager;
 import tech.seife.teleportation.Teleportation;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -11,6 +12,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import tech.seife.teleportation.enums.ReplaceType;
 
 public class RandomTeleport implements CommandExecutor {
 
@@ -28,7 +30,7 @@ public class RandomTeleport implements CommandExecutor {
                 Location location = getRandomLocation(player.getWorld(), player.getWorld().getWorldBorder().getSize() / 2);
                 Bukkit.getScheduler().runTask(plugin, () -> {
                     player.teleport(location);
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("randomTeleport")));
+                    player.sendMessage(MessageManager.getTranslatedMessage(plugin, "rtp"));
                 });
             });
             return true;

@@ -100,6 +100,11 @@ commands:
     description: Use this command to teleport the spawn point.
     permission: teleportation.spawn
     permission-message: You don't have permission to use this command.
+  blockSelector:
+    usage: </blockSelecrtor>
+    description: Use this command to get the item to create a warp block.
+    permission: teleportation.blockSelector
+    permission-message: You don't have permission to use this command.
   linkTeleportToBlock:
     usage: </linkTeleportToBlock> <id>
     description: Use this command to a link block with a warp point.

@@ -1,5 +1,6 @@
 package tech.seife.teleportation.events;
 
+import tech.seife.teleportation.MessageManager;
 import tech.seife.teleportation.Teleportation;
 import tech.seife.teleportation.signs.Sign;
 import org.bukkit.event.EventHandler;
@@ -21,6 +22,7 @@ public final class OnSignChangeEvent implements Listener {
 
             plugin.getSignManager().addSign(sign.getId(), sign.getSignLocation(), sign.getLocationToTeleport());
             plugin.getDataHandler().getHandleData().saveSign(sign);
+            e.getPlayer().sendMessage(MessageManager.getTranslatedMessage(plugin, "createdWarpSign"));
         }
     }
 

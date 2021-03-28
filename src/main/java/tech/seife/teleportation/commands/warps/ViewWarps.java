@@ -1,11 +1,12 @@
 package tech.seife.teleportation.commands.warps;
 
-import tech.seife.teleportation.Teleportation;
-import tech.seife.teleportation.warps.Warp;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import tech.seife.teleportation.MessageManager;
+import tech.seife.teleportation.Teleportation;
+import tech.seife.teleportation.warps.Warp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +63,7 @@ public class ViewWarps implements CommandExecutor {
 
     private void sendFirstPage(CommandSender sender) {
         if (plugin.getWarpManager().getWarps().size() == 0) {
-            sender.sendMessage(plugin.getConfig().getString("noWarpsAvailable"));
+            sender.sendMessage(MessageManager.getTranslatedMessage(plugin, "noWarpsAvailable"));
         } else if (plugin.getWarpManager().getWarps().size() <= 10) {
             for (Warp warp : plugin.getWarpManager().getWarps()) {
                 sender.sendMessage(warp.getName() + ",");

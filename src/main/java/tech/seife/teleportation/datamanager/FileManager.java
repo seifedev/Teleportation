@@ -1,104 +1,155 @@
 package tech.seife.teleportation.datamanager;
 
-import tech.seife.teleportation.Teleportation;
+import com.google.gson.Gson;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import tech.seife.teleportation.Teleportation;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
 
 public class FileManager {
 
     private final Teleportation plugin;
 
-    private final File homeFile, warpFile, invitationsFile, spawnFile, portalsFile;
-    private final FileConfiguration homeConfig, warpsConfig, invitationsConfig, spawnConfig, portalsConfig;
+    private final File homeFile, warpFile, invitationsFile, spawnFile, portalsFile, translationFile, signFile;
+    private final FileConfiguration translationConfig;
+
+    private final Gson gson;
 
     public FileManager(Teleportation plugin) {
         this.plugin = plugin;
+        gson = new Gson();
 
-        homeFile = new File(plugin.getDataFolder(), "homes.yml");
-        homeConfig = new YamlConfiguration();
-        createFile(homeConfig, homeFile, "homes.yml");
+        homeFile = new File(plugin.getDataFolder(), "homes.json");
+        createJsonFile(homeFile);
 
-        warpFile = new File(plugin.getDataFolder(), "warps.yml");
-        warpsConfig = new YamlConfiguration();
-        createFile(warpsConfig, warpFile, "warps.yml");
+        warpFile = new File(plugin.getDataFolder(), "warps.json");
+        createJsonFile(warpFile);
 
-        invitationsFile = new File(plugin.getDataFolder(), "invitations.yml");
-        invitationsConfig = new YamlConfiguration();
-        createFile(invitationsConfig, invitationsFile, "invitations.yml");
+        invitationsFile = new File(plugin.getDataFolder(), "invitations.json");
+        createJsonFile(invitationsFile);
 
-        spawnFile = new File(plugin.getDataFolder(), "spawns.yml");
-        spawnConfig = new YamlConfiguration();
-        createFile(spawnConfig, spawnFile, "spawns.yml");
+        spawnFile = new File(plugin.getDataFolder(), "spawn.json");
+        createJsonFile(spawnFile);
 
-        portalsFile = new File(plugin.getDataFolder(), "portals.yml");
-        portalsConfig = new YamlConfiguration();
-        createFile(portalsConfig, portalsFile, "portals.yml");
+        portalsFile = new File(plugin.getDataFolder(), "portals.json");
+        createJsonFile(portalsFile);
 
+        signFile = new File(plugin.getDataFolder(), "sign.json");
+        createJsonFile(signFile);
+
+        translationFile = new File(plugin.getDataFolder(), "translation.yml");
+        translationConfig = new YamlConfiguration();
+
+        createYamlFile(translationFile, translationConfig);
     }
 
-    private void createFile(FileConfiguration configFile, File file, String configName) {
+    public Map getHomeFile() {
+        return getGson(homeFile);
+    }
+
+    public Map getWarpFile() {
+        return getGson(warpFile);
+    }
+
+    public Map getInvitationsFile() {
+        return getGson(invitationsFile);
+    }
+
+    public Map getSpawnFile() {
+        return getGson(spawnFile);
+    }
+
+    public Map getPortalsFile() {
+        return getGson(portalsFile);
+    }
+
+    public Map getSignFile() {
+        return getGson(signFile);
+    }
+
+    public void saveHomeFile(Map map) {
+        saveJson(homeFile, map);
+    }
+
+    public void saveWarpFile(Map map) {
+        saveJson(warpFile, map);
+    }
+
+    public void saveInvitationsFile(Map map) {
+        saveJson(invitationsFile, map);
+    }
+
+    public void saveSpawnFile(Map map) {
+        saveJson(spawnFile, map);
+    }
+
+    public void savePortalsFile(Map map) {
+        saveJson(portalsFile, map);
+    }
+
+    public void saveSignFile(Map map) {
+        saveJson(signFile, map);
+    }
+
+    public void saveJson(File file, Map map) {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            String jsonString = gson.toJson(map);
+
+            file.delete();
+
+            try {
+                Files.write(file.toPath(), jsonString.getBytes());
+            } catch (IOException e) {
+                plugin.getLogger().log(Level.WARNING, "Failed to save json!\nErrorMessage: " + e.getMessage());
+            }
+        });
+    }
+
+    public Gson getGson() {
+        return gson;
+    }
+
+    public FileConfiguration getTranslationConfig() {
+        return translationConfig;
+    }
+
+    private void createYamlFile(File file, Configuration config) {
         if (!file.exists()) {
-            file.getParentFile().mkdirs();
-            plugin.saveResource(configName, false);
+            plugin.saveResource(file.getName(), false);
         }
+
         try {
-            configFile.load(file);
-        } catch (InvalidConfigurationException | IOException e) {
-            Bukkit.getLogger().warning(e.getMessage());
+            translationConfig.load(translationFile);
+        } catch (IOException | InvalidConfigurationException e) {
+            plugin.getLogger().log(Level.WARNING, "Couldn't load translation config file!\nError message: ", e.getMessage());
         }
     }
 
-    public void savePortalsConfig() {
-        saveFile(portalsConfig, portalsFile);
+    private void createJsonFile(File file) {
+        if (!file.exists()) {
+            plugin.saveResource(file.getName(), false);
+        }
     }
 
-    public void saveSpawnConfig() {
-        saveFile(spawnConfig, spawnFile);
-    }
 
-    public void saveHomeConfig() {
-        saveFile(homeConfig, homeFile);
-    }
-
-    public void saveWarpsFile() {
-        saveFile(warpsConfig, warpFile);
-    }
-
-    public void saveInvitationFile() {
-        saveFile(invitationsConfig, invitationsFile);
-    }
-
-    private void saveFile(FileConfiguration fileConfig, File file) {
+    private HashMap getGson(File file) {
         try {
-            fileConfig.save(file);
-        } catch (IOException e) {
-            Bukkit.getLogger().warning("Error message: " + e.getMessage());
+            return gson.fromJson(new FileReader(file), HashMap.class);
+        } catch (FileNotFoundException e) {
+            plugin.getLogger().log(Level.WARNING, file.getName() + " wasn't found");
         }
+        return null;
     }
 
-
-    public FileConfiguration getInvitationsConfig() {
-        return invitationsConfig;
-    }
-
-    public FileConfiguration getHomeConfig() {
-        return homeConfig;
-    }
-
-    public FileConfiguration getWarpsConfig() {
-        return warpsConfig;
-    }
-
-    public FileConfiguration getSpawnConfig() {
-        return spawnConfig;
-    }
-
-    public FileConfiguration getPortalsConfig() {
-        return portalsConfig;
-    }
 }

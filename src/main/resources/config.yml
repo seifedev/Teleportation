@@ -1,0 +1,14 @@
+useDatabase: true
+
+hostname:
+username:
+password:
+
+useSecureConnection:
+minimumConnections:
+maximumConnections:
+connectionsTimeout:
+idleTimeout:
+
+tpaExpiration: 30
+maxHomes: 5

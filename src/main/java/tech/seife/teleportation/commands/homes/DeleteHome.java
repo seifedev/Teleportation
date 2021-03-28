@@ -1,14 +1,16 @@
 package tech.seife.teleportation.commands.homes;
 
-import tech.seife.teleportation.Teleportation;
-import tech.seife.teleportation.homes.Home;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import tech.seife.teleportation.MessageManager;
+import tech.seife.teleportation.Teleportation;
+import tech.seife.teleportation.enums.ReplaceType;
+import tech.seife.teleportation.homes.Home;
 
-import java.util.Objects;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class DeleteHome implements CommandExecutor {
@@ -38,6 +40,11 @@ public class DeleteHome implements CommandExecutor {
         Home home = plugin.getDataHandler().getHandleData().getHomeUuid(playerUuid, homeName);
         plugin.getDataHandler().getHandleData().removeHome(plugin.getDataHandler().getHandleData().getHomeUuid(playerUuid, homeName));
         plugin.getDataHandler().getHandleData().removeHome(home);
-        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getMessageManager().replaceHomeName(Objects.requireNonNull(plugin.getConfig().getString("homeDelete")), home.getHomeName())));
+
+        Map<ReplaceType, String> values = new HashMap<>();
+
+        values.put(ReplaceType.HOME_NAME, homeName);
+
+        sender.sendMessage(MessageManager.getTranslatedMessageWithReplace(plugin, "deleteHome", values));
     }
 }

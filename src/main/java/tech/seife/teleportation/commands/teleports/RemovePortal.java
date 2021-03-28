@@ -1,10 +1,10 @@
 package tech.seife.teleportation.commands.teleports;
 
-import tech.seife.teleportation.Teleportation;
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import tech.seife.teleportation.MessageManager;
+import tech.seife.teleportation.Teleportation;
 
 public class RemovePortal implements CommandExecutor {
 
@@ -19,22 +19,15 @@ public class RemovePortal implements CommandExecutor {
         if (args.length == 1 && args[0] != null) {
             if (!verifyLocationInConfig(args[0])) return true;
 
-            Location location = plugin.getFileManager().getPortalsConfig().getConfigurationSection(args[0]).getLocation("portal");
-
             plugin.getDataHandler().getHandleData().removePortal(args[0]);
-            plugin.getDataHolder().getPortalLocationWarp().remove(location);
+            plugin.getDataHandler().getHandleData().loadPortals();
 
-            sender.sendMessage("portal removed");
+            sender.sendMessage(MessageManager.getTranslatedMessage(plugin, "removedPortal"));
         }
         return true;
     }
 
     private boolean verifyLocationInConfig(String name) {
-        if (plugin.getFileManager() != null && plugin.getFileManager().getPortalsConfig() != null) {
-            if (plugin.getFileManager().getPortalsConfig().getConfigurationSection(name) != null) {
-                return plugin.getFileManager().getPortalsConfig().getConfigurationSection(name).getLocation("portal") != null;
-            }
-        }
-        return false;
+        return plugin.getDataHandler().getHandleData().doesPortalExist(name);
     }
 }

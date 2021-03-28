@@ -8,10 +8,13 @@ import tech.seife.teleportation.commands.requeststeleports.RequestTeleportThere;
 import tech.seife.teleportation.commands.teleports.*;
 import tech.seife.teleportation.commands.warps.*;
 import tech.seife.teleportation.datamanager.*;
+import tech.seife.teleportation.datamanager.dao.DataHandler;
 import tech.seife.teleportation.events.*;
 import tech.seife.teleportation.requestteleport.RequesterTeleportManager;
 import tech.seife.teleportation.signs.SignManager;
 import tech.seife.teleportation.warps.WarpManager;
+
+import java.util.logging.Level;
 
 public final class Teleportation extends JavaPlugin {
 
@@ -35,8 +38,10 @@ public final class Teleportation extends JavaPlugin {
 
     private void initialize() {
         if (!getConfig().getBoolean("useDatabase")) {
+            getLogger().log(Level.SEVERE, "Initializing files");
             fileManager = new FileManager(this);
         } else {
+            getLogger().log(Level.SEVERE, "Initializing database");
             connectionPoolManager = new ConnectionPoolManager(this.getConfig());
             new SQLManager(this);
         }

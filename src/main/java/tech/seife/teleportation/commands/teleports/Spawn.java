@@ -1,5 +1,6 @@
 package tech.seife.teleportation.commands.teleports;
 
+import tech.seife.teleportation.MessageManager;
 import tech.seife.teleportation.Teleportation;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,6 +20,7 @@ public class Spawn implements CommandExecutor {
         if (sender instanceof Player) {
             if (plugin.getDataHolder().getSpawnLocation() != null) {
                 ((Player) sender).teleport(plugin.getDataHolder().getSpawnLocation());
+                MessageManager.getTranslatedMessage(plugin, "spawn");
             }
         }
         return true;

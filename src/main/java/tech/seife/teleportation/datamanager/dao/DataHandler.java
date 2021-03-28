@@ -1,4 +1,4 @@
-package tech.seife.teleportation.datamanager;
+package tech.seife.teleportation.datamanager.dao;
 
 import tech.seife.teleportation.Teleportation;
 import org.bukkit.Bukkit;

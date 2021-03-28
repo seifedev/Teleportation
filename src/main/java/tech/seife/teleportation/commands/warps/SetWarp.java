@@ -1,6 +1,8 @@
 package tech.seife.teleportation.commands.warps;
 
+import tech.seife.teleportation.MessageManager;
 import tech.seife.teleportation.Teleportation;
+import tech.seife.teleportation.enums.ReplaceType;
 import tech.seife.teleportation.warps.Warp;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -11,6 +13,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class SetWarp implements CommandExecutor {
@@ -60,7 +64,11 @@ public class SetWarp implements CommandExecutor {
     }
 
     private void sendMessage(CommandSender sender, Location location, String name) {
-        sender.sendMessage(plugin.getMessageManager().replaceWarpPoint(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("successfulSetWarp"))), location, name));
+        Map<ReplaceType, String> values = new HashMap<>();
+
+        values.put(ReplaceType.WARP_NAME, name);
+
+        sender.sendMessage(MessageManager.getTranslatedMessageWithReplace(plugin, "newWarp", values));
     }
 
     private boolean createWarp(CommandSender sender, String name, Location location) {
