@@ -1,13 +1,17 @@
 package tech.seife.teleportation.commands.homes;
 
-import tech.seife.teleportation.Teleportation;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import tech.seife.teleportation.MessageManager;
+import tech.seife.teleportation.Teleportation;
+import tech.seife.teleportation.enums.ReplaceType;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ViewHomes implements CommandExecutor {
 
@@ -23,7 +27,16 @@ public class ViewHomes implements CommandExecutor {
             Player player = Bukkit.getPlayer(args[0]);
             if (plugin.getDataHandler().getHandleData().getHomeNamesOfPlayer(player.getUniqueId()) != null) {
                 List<String> homeNames = plugin.getDataHandler().getHandleData().getHomeNamesOfPlayer(player.getUniqueId());
-                sender.sendMessage(homeNames.toString());
+
+                if (homeNames.isEmpty()) {
+                    Map<ReplaceType, String> values = new HashMap<>();
+                    values.put(ReplaceType.PLAYER_NAME, player.getName());
+                    
+                    MessageManager.getTranslatedMessageWithReplace(plugin, "playerDoesntHaveAHouse", values);
+
+                } else {
+                    sender.sendMessage(homeNames.toString());
+                }
                 return true;
             }
         }

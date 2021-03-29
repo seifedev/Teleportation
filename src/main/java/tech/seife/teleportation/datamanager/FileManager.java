@@ -2,7 +2,6 @@ package tech.seife.teleportation.datamanager;
 
 import com.google.gson.Gson;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -21,13 +20,23 @@ public class FileManager {
 
     private final Teleportation plugin;
 
-    private final File homeFile, warpFile, invitationsFile, spawnFile, portalsFile, translationFile, signFile;
-    private final FileConfiguration translationConfig;
-
-    private final Gson gson;
+    private File homeFile;
+    private File warpFile;
+    private File invitationsFile;
+    private File spawnFile;
+    private File portalsFile;
+    private final File translationFile;
+    private File signFile;
+    private Gson gson;
+    private FileConfiguration translationConfig;
 
     public FileManager(Teleportation plugin) {
         this.plugin = plugin;
+        translationFile = new File(plugin.getDataFolder(), "translation.yml");
+        createTranslationFile(plugin);
+    }
+
+    public void createGson() {
         gson = new Gson();
 
         homeFile = new File(plugin.getDataFolder(), "homes.json");
@@ -47,11 +56,12 @@ public class FileManager {
 
         signFile = new File(plugin.getDataFolder(), "sign.json");
         createJsonFile(signFile);
+    }
 
-        translationFile = new File(plugin.getDataFolder(), "translation.yml");
+    public void createTranslationFile(Teleportation plugin) {
         translationConfig = new YamlConfiguration();
-
-        createYamlFile(translationFile, translationConfig);
+        plugin.getLogger().log(Level.WARNING, "creating file!");
+        createYamlFile(translationFile);
     }
 
     public Map getHomeFile() {
@@ -124,10 +134,15 @@ public class FileManager {
         return translationConfig;
     }
 
-    private void createYamlFile(File file, Configuration config) {
+    private void createYamlFile(File file) {
+        file = new File(plugin.getDataFolder(), file.getName());
+
         if (!file.exists()) {
+            file.getParentFile().mkdirs();
             plugin.saveResource(file.getName(), false);
         }
+
+        translationConfig = new YamlConfiguration();
 
         try {
             translationConfig.load(translationFile);

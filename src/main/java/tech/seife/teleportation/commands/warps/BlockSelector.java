@@ -1,6 +1,5 @@
 package tech.seife.teleportation.commands.warps;
 
-import tech.seife.teleportation.Teleportation;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
@@ -10,6 +9,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import tech.seife.teleportation.MessageManager;
+import tech.seife.teleportation.Teleportation;
 
 public class BlockSelector implements CommandExecutor {
 
@@ -23,6 +24,7 @@ public class BlockSelector implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             ((Player) sender).getInventory().addItem(getBlockSelectorItem());
+            MessageManager.getTranslatedMessage(plugin, "blockSelectorExplanation");
         }
         return true;
     }

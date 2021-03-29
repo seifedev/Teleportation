@@ -68,7 +68,7 @@ public class HandleDatabaseData implements HandleData {
 
     @Override
     public Home getHomeUuid(UUID owner, String homeName) {
-        String sqlQuery = "SELECT * FROM players_home INNER JOIN homes WHERE homes.owner = ? and name = ?";
+        String sqlQuery = "SELECT * FROM players_home INNER JOIN homes WHERE homes.ownerUuid = ? and players_home.name = ?;";
         try (Connection connection = plugin.getConnectionPoolManager().getConnection();
              PreparedStatement ps = connection.prepareStatement(sqlQuery)) {
 
@@ -78,7 +78,7 @@ public class HandleDatabaseData implements HandleData {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                return new Home(rs.getInt("homes.id"), UUID.fromString(rs.getString("ownerUuid")), rs.getString("ownerName"), rs.getString("homeName"), getLocationFromId(rs.getInt("location")));
+                return new Home(rs.getInt("homes.id"), UUID.fromString(rs.getString("homes.ownerUuid")), rs.getString("homes.ownerName"), rs.getString("players_home.name"), getLocationFromId(rs.getInt("players_home.location")));
             }
 
         } catch (SQLException e) {
@@ -90,7 +90,7 @@ public class HandleDatabaseData implements HandleData {
     @Override
     public void saveHome(Home home) {
 
-        String sqlQuery = "INSERT INTO homes (ownerUuid, ownerName, home) VALUES (?, ?);";
+        String sqlQuery = "INSERT INTO homes (ownerUuid, ownerName, home) VALUES (?, ?, ?);";
 
         try (Connection connection = plugin.getConnectionPoolManager().getConnection();
              PreparedStatement ps = connection.prepareStatement(sqlQuery, RETURN_GENERATED_KEYS)) {
@@ -193,7 +193,7 @@ public class HandleDatabaseData implements HandleData {
 
     @Override
     public List<String> getHomeNamesOfPlayer(UUID playerUuid) {
-        String sqlQuery = "SELECT * from homes INNER JOIN players_home WHERE owner = ?;";
+        String sqlQuery = "SELECT * from homes INNER JOIN players_home WHERE ownerUuid = ?;";
 
         try (Connection connection = plugin.getConnectionPoolManager().getConnection();
              PreparedStatement ps = connection.prepareStatement(sqlQuery)) {
@@ -219,7 +219,7 @@ public class HandleDatabaseData implements HandleData {
 
     @Override
     public int getNumberOfHomes(UUID playerUuid) {
-        String sqlQuery = "SELECT COUNT(*) FROM homes INNER JOIN players_home WHERE owner = ?;";
+        String sqlQuery = "SELECT COUNT(*) FROM homes INNER JOIN players_home WHERE ownerUuid = ?;";
 
         try (Connection connection = plugin.getConnectionPoolManager().getConnection();
              PreparedStatement ps = connection.prepareStatement(sqlQuery)) {
@@ -238,7 +238,7 @@ public class HandleDatabaseData implements HandleData {
 
     @Override
     public boolean isValidInvitation(UUID invitedUuid, UUID invitedBy, String homeName) {
-        String sqlQuery = "SELECT COUNT(*) AS total FROM invitations INNER join players_home INNER join homes WHERE invited = ? and owner = ? and name = ?;";
+        String sqlQuery = "SELECT COUNT(*) AS total FROM invitations INNER join players_home INNER join homes WHERE invited = ? and ownerUuid = ? and name = ?;";
 
         try (Connection connection = plugin.getConnectionPoolManager().getConnection();
              PreparedStatement ps = connection.prepareStatement(sqlQuery)) {
@@ -527,7 +527,7 @@ public class HandleDatabaseData implements HandleData {
     @Override
     public void removePortal(String portalName) {
 
-        String sqlQuery = "DELETE portals FROM portals LEFT JOIN locations l on l.id = portals.location_to_teleport LEFT JOIN locations l2 on l2.id = portals.portal_location WHERE l.id = ?;";
+        String sqlQuery = "DELETE portals FROM portals LEFT JOIN locations l on l.id = portals.location_to_teleport LEFT JOIN locations l2 on l2.id = portals.portal_location WHERE portals.name = ?;";
 
         try (Connection connection = plugin.getConnectionPoolManager().getConnection();
              PreparedStatement ps = connection.prepareStatement(sqlQuery)) {
@@ -535,7 +535,6 @@ public class HandleDatabaseData implements HandleData {
             ps.setString(1, portalName);
 
             ps.executeUpdate();
-
         } catch (SQLException e) {
             plugin.getLogger().log(Level.WARNING, "Failed to delete portal!\nError message: " + e.getMessage());
         }
@@ -552,6 +551,7 @@ public class HandleDatabaseData implements HandleData {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
+                System.out.println("this is where the error happens!");
                 plugin.getDataHolder().getPortalLocationWarp().put(getLocationFromId(rs.getInt("portal_location")), getLocationFromId(rs.getInt("location_to_teleport")));
             }
 
@@ -584,13 +584,14 @@ public class HandleDatabaseData implements HandleData {
 
     @Override
     public boolean doesPortalExist(String portalName) {
-        String sqlQuery = "SELECT * FROM locations WHERE name = ?;";
+        String sqlQuery = "SELECT * FROM portals LEFT JOIN locations l on l.id = portals.location_to_teleport LEFT JOIN locations l2 on l2.id = portals.portal_location WHERE portals.name = ?;";
 
         try (Connection connection = plugin.getConnectionPoolManager().getConnection();
              PreparedStatement ps = connection.prepareStatement(sqlQuery)) {
 
-            ResultSet rs = ps.executeQuery();
+            ps.setString(1, portalName);
 
+            ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 return true;
             }

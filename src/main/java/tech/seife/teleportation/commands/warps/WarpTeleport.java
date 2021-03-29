@@ -30,7 +30,7 @@ public class WarpTeleport implements CommandExecutor {
 
                 values.put(ReplaceType.WARP_NAME, args[0]);
 
-                sender.sendMessage(MessageManager.getTranslatedMessage(plugin, "warpTeleport"));
+                sender.sendMessage(MessageManager.getTranslatedMessageWithReplace(plugin, "warpTeleport", values));
                 return true;
             }
         }

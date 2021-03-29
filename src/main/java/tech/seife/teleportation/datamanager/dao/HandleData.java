@@ -14,7 +14,7 @@ public interface HandleData {
 
     boolean isHomeValidUsername(String owner, String homeName);
 
-    Home    getHomeUuid(UUID owner, String homeName);
+    Home getHomeUuid(UUID owner, String homeName);
 
     void saveHome(Home home);
 
