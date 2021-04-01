@@ -15,14 +15,15 @@ public class MessageManager {
                 message = message.replaceAll(entry.getKey().getValue(), entry.getValue());
             }
             return ChatColor.translateAlternateColorCodes('&', message);
+        } else {
+            return "we don't have a message available.";
         }
-        return "There isn't a message.";
     }
 
     public static String getTranslatedMessage(Teleportation plugin, String path) {
         if (plugin.getFileManager() != null && plugin.getFileManager().getTranslationConfig() != null && plugin.getFileManager().getTranslationConfig().getString(path) != null) {
             return ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getTranslationConfig().getString(path));
         }
-        return null;
+        return "we don't have a message available.";
     }
 }

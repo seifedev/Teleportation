@@ -219,7 +219,7 @@ public class HandleDatabaseData implements HandleData {
 
     @Override
     public int getNumberOfHomes(UUID playerUuid) {
-        String sqlQuery = "SELECT COUNT(*) FROM homes INNER JOIN players_home WHERE ownerUuid = ?;";
+        String sqlQuery = "SELECT COUNT(*) AS total FROM homes INNER JOIN players_home WHERE ownerUuid = ?;";
 
         try (Connection connection = plugin.getConnectionPoolManager().getConnection();
              PreparedStatement ps = connection.prepareStatement(sqlQuery)) {
@@ -228,7 +228,7 @@ public class HandleDatabaseData implements HandleData {
 
             ResultSet rs = ps.executeQuery();
 
-            return rs.next() ? rs.getInt("1") : -1;
+            return rs.next() ? rs.getInt("total") : -1;
 
         } catch (SQLException e) {
             plugin.getLogger().log(Level.WARNING, "Failed to retrieve number of homes!\nError message: " + e.getMessage());
@@ -551,7 +551,6 @@ public class HandleDatabaseData implements HandleData {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                System.out.println("this is where the error happens!");
                 plugin.getDataHolder().getPortalLocationWarp().put(getLocationFromId(rs.getInt("portal_location")), getLocationFromId(rs.getInt("location_to_teleport")));
             }
 

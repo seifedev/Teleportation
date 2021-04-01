@@ -16,17 +16,17 @@ commands:
     permission: teleportation.tpaHere
     permission-message: You don't have permission to use this command..
   setHome:
-    usage: </setHome> <name> (optional)
+    usage: </setHome> <name> 
     description: Use this command to create a personal warp point.
     permission: teleportation.sethome
     permission-message: You don't have permission to use this command.
   home:
-    usage: </home> <name> (optional)
+    usage: </home> <name>
     description: Use this command to teleport to your personal warp point.
     permission: teleportation.home
     permission-message: You don't have permission to use this command.
   deleteHome:
-    usage: </home> <name> (optional)
+    usage: </home> <name> 
     description: Use this command to destroy your personal warp point.
     permission: teleportation.deleteHome
     permission-message: You don't have permission to use this command.
@@ -76,7 +76,7 @@ commands:
     permission: teleportation.teleport
     permission-message: You don't have permission to use this command.
   homeInvite:
-    usage: </homeInvite> <player name> <home name> (optional)
+    usage: </homeInvite> <player name> <home name> 
     description: Use this command to allow a player to use your personal warp point.
     permission: teleportation.homeInvite
     permission-message: You don't have permission to use this command.
@@ -86,7 +86,7 @@ commands:
     permission: teleportation.visitHome
     permission-message: You don't have permission to use this command.
   revokeInvitation:
-    usage: </revokeInvitation> <player name> <home name> (optional)
+    usage: </revokeInvitation> <player name> <home name> 
     description: Use this command to remove personal warp point invitation.
     permission: teleportation.revokeInvitation
     permission-message: You don't have permission to use this command.

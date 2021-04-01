@@ -1,14 +1,14 @@
 package tech.seife.teleportation.commands.homes;
 
-import tech.seife.teleportation.MessageManager;
-import tech.seife.teleportation.Teleportation;
-import tech.seife.teleportation.enums.ReplaceType;
-import tech.seife.teleportation.homes.Home;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import tech.seife.teleportation.MessageManager;
+import tech.seife.teleportation.Teleportation;
+import tech.seife.teleportation.enums.ReplaceType;
+import tech.seife.teleportation.homes.Home;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,7 +42,7 @@ public class SetHome implements CommandExecutor {
 
     private boolean canCreateHome(Player player, String homeName) {
         for (int i = 0; i <= plugin.getConfig().getInt("maxHomes"); i++) {
-                if (player.hasPermission("Teleportation.homes." + i)) {
+            if (player.hasPermission("Teleportation.homes." + i)) {
                 if (plugin.getDataHandler().getHandleData().getNumberOfHomes(player.getUniqueId()) < i) {
                     return !plugin.getDataHandler().getHandleData().isHomeValidUuid(player.getUniqueId(), homeName);
                 }
@@ -53,13 +53,11 @@ public class SetHome implements CommandExecutor {
     }
 
     private void sendMessage(CommandSender sender, String replaceName, String path) {
-        if (plugin.getMessageManager() != null && plugin.getConfig().getString(path) != null) {
 
-            Map<ReplaceType, String> values = new HashMap<>();
+        Map<ReplaceType, String> values = new HashMap<>();
 
-            values.put(ReplaceType.HOME_NAME, replaceName);
+        values.put(ReplaceType.HOME_NAME, replaceName);
 
-            sender.sendMessage(MessageManager.getTranslatedMessageWithReplace(plugin, path, values));
-        }
+        sender.sendMessage(MessageManager.getTranslatedMessageWithReplace(plugin, path, values));
     }
 }

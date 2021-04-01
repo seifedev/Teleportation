@@ -97,7 +97,6 @@ public class HandleDataFiles implements HandleData {
         jsonObject.remove(home.getOwnerUuid().toString());
         jsonObject.add(home.getOwnerUuid().toString(), owner);
 
-        System.out.println(jsonObject.toString());
 
         plugin.getFileManager().saveHomeFile(gson.fromJson(jsonObject, Map.class));
     }

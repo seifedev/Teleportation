@@ -25,14 +25,13 @@ public class FileManager {
     private File invitationsFile;
     private File spawnFile;
     private File portalsFile;
-    private final File translationFile;
+    private File translationFile;
     private File signFile;
     private Gson gson;
     private FileConfiguration translationConfig;
 
     public FileManager(Teleportation plugin) {
         this.plugin = plugin;
-        translationFile = new File(plugin.getDataFolder(), "translation.yml");
         createTranslationFile(plugin);
     }
 
@@ -60,7 +59,8 @@ public class FileManager {
 
     public void createTranslationFile(Teleportation plugin) {
         translationConfig = new YamlConfiguration();
-        plugin.getLogger().log(Level.WARNING, "creating file!");
+
+        translationFile = new File(plugin.getDataFolder(), "translation.yml");
         createYamlFile(translationFile);
     }
 
@@ -135,8 +135,6 @@ public class FileManager {
     }
 
     private void createYamlFile(File file) {
-        file = new File(plugin.getDataFolder(), file.getName());
-
         if (!file.exists()) {
             file.getParentFile().mkdirs();
             plugin.saveResource(file.getName(), false);

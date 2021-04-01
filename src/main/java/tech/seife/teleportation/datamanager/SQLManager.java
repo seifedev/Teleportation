@@ -1,7 +1,7 @@
 package tech.seife.teleportation.datamanager;
 
-import tech.seife.teleportation.Teleportation;
 import org.bukkit.Bukkit;
+import tech.seife.teleportation.Teleportation;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,16 +19,14 @@ public class SQLManager {
     }
 
     private void createTables() {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            createLocationTable();
-            createPlayersHome();
-            createHomeTable();
-            createWarpTable();
-            createInvitationTable();
-            createSpawnTable();
-            createSignsTable();
-            createPortalsTable();
-        });
+        createLocationTable();
+        createPlayersHome();
+        createHomeTable();
+        createWarpTable();
+        createInvitationTable();
+        createSpawnTable();
+        createSignsTable();
+        createPortalsTable();
     }
 
     private void createHomeTable() {
@@ -36,7 +34,7 @@ public class SQLManager {
                 "(id INTEGER NOT NULL AUTO_INCREMENT," +
                 "ownerUuid VARCHAR (36) NOT NULL," +
                 "ownerName VARCHAR(500) NOT NULL," +
-                "homeName INTEGER NOT NULL," +
+                "home INTEGER NOT NULL," +
                 "FOREIGN KEY(home) REFERENCES players_home (id) ON UPDATE CASCADE ON DELETE CASCADE," +
                 "PRIMARY KEY (id));";
         runQuery(sqlQuery);
