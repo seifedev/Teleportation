@@ -22,7 +22,7 @@ public class HomeInvite implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player && args.length >= 1) {
+        if (sender instanceof Player) {
             if (Bukkit.getPlayer(args[0]) != null) {
                 if (args.length == 1) {
                     invitationToSpecificHome(sender, "home", args[0], ((Player) sender).getDisplayName());

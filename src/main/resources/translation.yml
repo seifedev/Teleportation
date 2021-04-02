@@ -28,7 +28,6 @@ warpDeleted: "You have deleted the warp %warp%"
 noWarpsAvailable: "We don't have any warps available!"
 warpTeleport: "You have teleported to the warp %warp%"
 createdWarpSign: "The warp sign has been made!"
-onlyPlayers: "Only players can run this command"
 wrongAmountOfArguments: "You have typed the command incorrectly, too many or too little arguments."
 blockSelectorExplanation:
   - "You are getting a stick, right click on a block to get a unique ID"

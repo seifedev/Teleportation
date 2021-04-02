@@ -38,8 +38,6 @@ public class SetHome implements CommandExecutor {
             } else {
                 sender.sendMessage(MessageManager.getTranslatedMessage(plugin, "wrongAmountOfArguments"));
             }
-        } else {
-            sender.sendMessage(MessageManager.getTranslatedMessage(plugin, "onlyPlayers"));
         }
         return true;
     }

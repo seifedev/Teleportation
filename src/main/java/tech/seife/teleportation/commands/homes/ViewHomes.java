@@ -31,13 +31,12 @@ public class ViewHomes implements CommandExecutor {
                 if (homeNames.isEmpty()) {
                     Map<ReplaceType, String> values = new HashMap<>();
                     values.put(ReplaceType.PLAYER_NAME, player.getName());
-                    
-                    MessageManager.getTranslatedMessageWithReplace(plugin, "playerDoesntHaveAHouse", values);
+
+                    sender.sendMessage(MessageManager.getTranslatedMessageWithReplace(plugin, "playerDoesntHaveAHouse", values));
 
                 } else {
                     sender.sendMessage(homeNames.toString());
                 }
-                return true;
             }
         }
         return true;
