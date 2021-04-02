@@ -35,7 +35,11 @@ public class SetHome implements CommandExecutor {
                 } else {
                     sendMessage(sender, args[0], "homeNotCreated");
                 }
+            } else {
+                sender.sendMessage(MessageManager.getTranslatedMessage(plugin, "wrongAmountOfArguments"));
             }
+        } else {
+            sender.sendMessage(MessageManager.getTranslatedMessage(plugin, "onlyPlayers"));
         }
         return true;
     }
