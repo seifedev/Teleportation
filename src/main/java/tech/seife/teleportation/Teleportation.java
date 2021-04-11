@@ -4,7 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import tech.seife.teleportation.commands.homes.*;
 import tech.seife.teleportation.commands.requeststeleports.RequestTeleportHere;
-import tech.seife.teleportation.commands.requeststeleports.RequestTeleportThere;
+import tech.seife.teleportation.commands.requeststeleports.TpaSubCommands;
 import tech.seife.teleportation.commands.teleports.*;
 import tech.seife.teleportation.commands.warps.*;
 import tech.seife.teleportation.datamanager.ConnectionPoolManager;
@@ -64,8 +64,8 @@ public final class Teleportation extends JavaPlugin {
 
 
     private void registerCommands() {
-        getCommand("tpa").setExecutor(new RequestTeleportThere(this, requesterTeleportManager));
-        getCommand("tpaHere").setExecutor(new RequestTeleportHere(this, requesterTeleportManager));
+        getCommand("tpa").setExecutor(new TpaSubCommands(requesterTeleportManager));
+        getCommand("tpaHere").setExecutor(new RequestTeleportHere(requesterTeleportManager));
         getCommand("setHome").setExecutor(new SetHome(this));
         getCommand("Home").setExecutor(new GoHome(this));
         getCommand("deleteHome").setExecutor(new DeleteHome(this));

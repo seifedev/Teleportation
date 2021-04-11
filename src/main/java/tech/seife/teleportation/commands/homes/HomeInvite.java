@@ -36,7 +36,7 @@ public class HomeInvite implements CommandExecutor {
     }
 
     private void invitationToSpecificHome(CommandSender sender, String homeName, String inviter, String invited) {
-        if (invited.equals(invited)) {
+        if (invited.equals(((Player) sender).getUniqueId().toString())) {
             sender.sendMessage("You can't invite yourself to your own home.");
             return;
         }

@@ -10,7 +10,6 @@ import tech.seife.teleportation.warps.Warp;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeSet;
 
 public class ViewWarps implements CommandExecutor {
 
@@ -40,7 +39,7 @@ public class ViewWarps implements CommandExecutor {
     }
 
     private void sendWarpsToChat(CommandSender sender, int page) {
-        List<Warp> warps = new ArrayList<>(new TreeSet<>(plugin.getWarpManager().getWarps()));
+        List<Warp> warps = new ArrayList<>(plugin.getWarpManager().getWarps());
 
         int index = 0;
         for (int i = page * 10; i <= warps.size(); i++) {

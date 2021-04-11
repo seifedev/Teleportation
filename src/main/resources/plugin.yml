@@ -13,7 +13,7 @@ commands:
   tpaHere:
     usage: </tpaHere> <name>
     description: Use this command to teleport a player to you after requesting it.
-    permission: teleportation.tpaHere
+    permission: teleportation.tpa
     permission-message: You don't have permission to use this command..
   setHome:
     usage: </setHome> <name> 

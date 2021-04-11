@@ -1,25 +1,20 @@
 package tech.seife.teleportation.commands.requeststeleports;
 
-import tech.seife.teleportation.Teleportation;
-import tech.seife.teleportation.requestteleport.RequestTeleport;
-import tech.seife.teleportation.requestteleport.RequesterTeleportManager;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import tech.seife.teleportation.requestteleport.RequestTeleport;
+import tech.seife.teleportation.requestteleport.RequesterTeleportManager;
 
-import java.util.Objects;
 import java.util.UUID;
 
 public final class TpaSubCommands implements CommandExecutor {
 
-    private final Teleportation plugin;
     private final RequesterTeleportManager requesterTeleportManager;
 
-    public TpaSubCommands(Teleportation plugin, RequesterTeleportManager requesterTeleportManager) {
-        this.plugin = plugin;
+    public TpaSubCommands(RequesterTeleportManager requesterTeleportManager) {
         this.requesterTeleportManager = requesterTeleportManager;
     }
 
@@ -46,7 +41,9 @@ public final class TpaSubCommands implements CommandExecutor {
     }
 
     private void requestTeleport(Player sender, String arg) {
+        System.out.println("test");
         requesterTeleportManager.addRequest(sender.getUniqueId(), Bukkit.getPlayer(arg).getUniqueId(), RequestTeleport.RequestType.TELEPORT_THERE);
+        requesterTeleportManager.sendMessages(sender.getPlayer(), Bukkit.getPlayer(arg), "tpaRequest", "sendHere");
     }
 
     private void cancelTeleportRequest(Player sender) {
@@ -68,10 +65,8 @@ public final class TpaSubCommands implements CommandExecutor {
     }
 
 
-
-
     private void sendDenyMessages(UUID requestSenderUuid, UUID requestReceiverUuid) {
-        requesterTeleportManager.sendMessages(Bukkit.getPlayer(requestSenderUuid).getPlayer(), Bukkit.getPlayer(requestSenderUuid).getPlayer(), "cancelledTpaSender", "cancelledTpaReceiver");
+        requesterTeleportManager.sendMessages(Bukkit.getPlayer(requestSenderUuid).getPlayer(), Bukkit.getPlayer(requestReceiverUuid).getPlayer(), "cancelledTpaSender", "cancelledTpaReceiver");
     }
 
 

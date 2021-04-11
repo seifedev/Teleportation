@@ -5,17 +5,14 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import tech.seife.teleportation.Teleportation;
 import tech.seife.teleportation.requestteleport.RequestTeleport;
 import tech.seife.teleportation.requestteleport.RequesterTeleportManager;
 
 public final class RequestTeleportHere implements CommandExecutor {
 
     private final RequesterTeleportManager requesterTeleportManager;
-    private final Teleportation plugin;
 
-    public RequestTeleportHere(Teleportation plugin, RequesterTeleportManager requesterTeleportManager) {
-        this.plugin = plugin;
+    public RequestTeleportHere(RequesterTeleportManager requesterTeleportManager) {
         this.requesterTeleportManager = requesterTeleportManager;
     }
 
@@ -25,7 +22,7 @@ public final class RequestTeleportHere implements CommandExecutor {
             if (Bukkit.getPlayer(args[0]) != null) {
                 requesterTeleportManager.addRequest(((Player) sender).getUniqueId(), Bukkit.getPlayer(args[0]).getUniqueId(), RequestTeleport.RequestType.TELEPORT_HERE);
 
-                requesterTeleportManager.sendMessages(((Player) sender).getPlayer(), Bukkit.getPlayer(args[0]), "tpaHereRequest", "sendTpaHere");
+                requesterTeleportManager.sendMessages(((Player) sender).getPlayer(), Bukkit.getPlayer(args[0]), "tpaRequest", "sendTpaHere");
             }
         }
         return true;

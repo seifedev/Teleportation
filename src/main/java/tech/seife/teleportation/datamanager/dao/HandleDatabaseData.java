@@ -48,10 +48,12 @@ public class HandleDatabaseData implements HandleData {
 
     @Override
     public boolean isHomeValidUsername(String owner, String homeName) {
+        System.out.println(0);
         String sqlQuery = "SELECT * FROM players_home INNER JOIN  homes WHERE homes.ownerName = ? and players_home.name = ?;";
 
         try (Connection connection = plugin.getConnectionPoolManager().getConnection();
              PreparedStatement ps = connection.prepareStatement(sqlQuery)) {
+            System.out.println(1);
 
             ps.setString(1, owner);
             ps.setString(2, homeName);
@@ -61,6 +63,7 @@ public class HandleDatabaseData implements HandleData {
             return rs.next();
 
         } catch (SQLException e) {
+            System.out.println(2);
             plugin.getLogger().log(Level.WARNING, "Failed to verify home owner!\nError message: " + e.getMessage());
         }
         return false;
@@ -102,7 +105,7 @@ public class HandleDatabaseData implements HandleData {
 
 
             ps.setString(1, home.getOwnerUuid().toString());
-            ps.setString(2, home.getHomeName());
+            ps.setString(2, home.getOwnerName());
             ps.setInt(3, playersHomeId);
 
             connection.setAutoCommit(true);
@@ -272,29 +275,34 @@ public class HandleDatabaseData implements HandleData {
 
             int homeId = getHomeId(inviter, homeName, connection);
 
-            ps.setString(1, invited);
-            ps.setInt(2, homeId);
+            if (homeId != -1) {
 
-            connection.setAutoCommit(true);
+                ps.setString(1, invited);
+                ps.setInt(2, homeId);
 
-            ps.executeUpdate();
+                connection.setAutoCommit(true);
+
+                ps.executeUpdate();
+            } else {
+                plugin.getLogger().log(Level.WARNING, "failed to save invitation");
+            }
 
         } catch (SQLException e) {
-            plugin.getLogger().log(Level.WARNING, "Failed to verify to save the invitation is valid!\nError message: " + e.getMessage());
+            plugin.getLogger().log(Level.WARNING, "Failed too save the invitation!\nError message: " + e.getMessage());
         }
     }
 
     private int getHomeId(String inviter, String homeName, Connection connection) {
-        String sqlQuery = "SELECT * FROM homes INNER JOIN players_home WHERE NAME = ? and ownerName = ?;";
+        String sqlQuery = "SELECT * FROM homes INNER JOIN players_home WHERE players_home.name = ? and homes.ownerName = ?;";
 
         try (PreparedStatement ps = connection.prepareStatement(sqlQuery, RETURN_GENERATED_KEYS)) {
 
-            ps.setString(1, inviter);
-            ps.setString(2, homeName);
+            ps.setString(1, homeName);
+            ps.setString(2, inviter);
 
             ResultSet rs = ps.executeQuery();
 
-            return rs.next() ? rs.getInt("1") : -1;
+            return rs.next() ? rs.getInt("id") : -1;
 
 
         } catch (SQLException e) {
