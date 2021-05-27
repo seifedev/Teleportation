@@ -23,9 +23,9 @@ public class RevokeInvitation implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player && args.length == 2 && args[0] != null && args[1] != null) {
+        if (sender instanceof Player && args.length == 2 && args[0] != null && args[1] != null && Bukkit.getPlayer(args[0]) != null) {
             if (Bukkit.getPlayer(args[0]) != null) {
-                UUID invited = ((Player) sender).getUniqueId();
+                UUID invited = Bukkit.getPlayer(args[0]).getUniqueId();
                 UUID inviter = ((Player) sender).getUniqueId();
 
                 revokeInvitation(sender, args, invited, inviter);

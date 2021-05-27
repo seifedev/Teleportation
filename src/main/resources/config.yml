@@ -3,6 +3,7 @@ useDatabase: true
 hostname:
 username:
 password:
+database:
 port:
 
 useSecureConnection:

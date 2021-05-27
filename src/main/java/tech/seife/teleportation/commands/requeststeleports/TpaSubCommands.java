@@ -41,7 +41,6 @@ public final class TpaSubCommands implements CommandExecutor {
     }
 
     private void requestTeleport(Player sender, String arg) {
-        System.out.println("test");
         requesterTeleportManager.addRequest(sender.getUniqueId(), Bukkit.getPlayer(arg).getUniqueId(), RequestTeleport.RequestType.TELEPORT_THERE);
         requesterTeleportManager.sendMessages(sender.getPlayer(), Bukkit.getPlayer(arg), "tpaRequest", "sendHere");
     }

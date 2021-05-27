@@ -48,12 +48,10 @@ public class HandleDatabaseData implements HandleData {
 
     @Override
     public boolean isHomeValidUsername(String owner, String homeName) {
-        System.out.println(0);
-        String sqlQuery = "SELECT * FROM players_home INNER JOIN  homes WHERE homes.ownerName = ? and players_home.name = ?;";
+        String sqlQuery = "SELECT * FROM players_home INNER JOIN  homes WHERE ownerName = ? and name = ?;";
 
         try (Connection connection = plugin.getConnectionPoolManager().getConnection();
              PreparedStatement ps = connection.prepareStatement(sqlQuery)) {
-            System.out.println(1);
 
             ps.setString(1, owner);
             ps.setString(2, homeName);
@@ -63,7 +61,6 @@ public class HandleDatabaseData implements HandleData {
             return rs.next();
 
         } catch (SQLException e) {
-            System.out.println(2);
             plugin.getLogger().log(Level.WARNING, "Failed to verify home owner!\nError message: " + e.getMessage());
         }
         return false;
@@ -243,6 +240,7 @@ public class HandleDatabaseData implements HandleData {
     public boolean isValidInvitation(UUID invitedUuid, UUID invitedBy, String homeName) {
         String sqlQuery = "SELECT COUNT(*) AS total FROM invitations INNER join players_home INNER join homes WHERE invited = ? and ownerUuid = ? and name = ?;";
 
+
         try (Connection connection = plugin.getConnectionPoolManager().getConnection();
              PreparedStatement ps = connection.prepareStatement(sqlQuery)) {
 
@@ -264,8 +262,7 @@ public class HandleDatabaseData implements HandleData {
     }
 
     @Override
-    public void saveInvitation(String invited, String inviter, String homeName) {
-
+    public void saveInvitation(String inviter, String invited, String homeName) {
         String sqlQuery = "INSERT INTO invitations (invited, homes) VALUES (?, ?);";
 
         try (Connection connection = plugin.getConnectionPoolManager().getConnection();
@@ -276,7 +273,6 @@ public class HandleDatabaseData implements HandleData {
             int homeId = getHomeId(inviter, homeName, connection);
 
             if (homeId != -1) {
-
                 ps.setString(1, invited);
                 ps.setInt(2, homeId);
 
@@ -293,7 +289,7 @@ public class HandleDatabaseData implements HandleData {
     }
 
     private int getHomeId(String inviter, String homeName, Connection connection) {
-        String sqlQuery = "SELECT * FROM homes INNER JOIN players_home WHERE players_home.name = ? and homes.ownerName = ?;";
+        String sqlQuery = "SELECT * FROM homes INNER JOIN players_home WHERE name = ? and ownerUuid = ?;";
 
         try (PreparedStatement ps = connection.prepareStatement(sqlQuery, RETURN_GENERATED_KEYS)) {
 

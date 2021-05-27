@@ -25,9 +25,9 @@ public class HomeInvite implements CommandExecutor {
         if (sender instanceof Player) {
             if (Bukkit.getPlayer(args[0]) != null) {
                 if (args.length == 1) {
-                    invitationToSpecificHome(sender, "home", args[0], ((Player) sender).getDisplayName());
+                    invitationToSpecificHome("home", ((Player) sender).getDisplayName(), args[0]);
                 } else if (args.length == 2 && args[1] != null) {
-                    invitationToSpecificHome(sender, args[1], args[0], ((Player) sender).getDisplayName());
+                    invitationToSpecificHome(args[1], ((Player) sender).getDisplayName(), args[0]);
                 }
             }
 
@@ -35,25 +35,27 @@ public class HomeInvite implements CommandExecutor {
         return true;
     }
 
-    private void invitationToSpecificHome(CommandSender sender, String homeName, String inviter, String invited) {
-        if (invited.equals(((Player) sender).getUniqueId().toString())) {
-            sender.sendMessage("You can't invite yourself to your own home.");
+    private void invitationToSpecificHome(String homeName, String inviter, String invited) {
+        if (inviter.equalsIgnoreCase(invited)) {
+            Bukkit.getPlayer(inviter).sendMessage("You can't invite yourself to your own home.");
             return;
         }
-        if (plugin.getDataHandler().getHandleData().isHomeValidUsername(inviter, homeName)) {
 
-            plugin.getDataHandler().getHandleData().saveInvitation(invited, inviter, homeName);
+        Player invitedToHome = Bukkit.getPlayer(invited);
+        Player initiator = Bukkit.getPlayer(inviter);
+
+        if (plugin.getDataHandler().getHandleData().isHomeValidUsername(initiator.getDisplayName(), homeName)) {
+            plugin.getDataHandler().getHandleData().saveInvitation(initiator.getUniqueId().toString(), invitedToHome.getUniqueId().toString(), homeName);
 
             Map<ReplaceType, String> values = new HashMap<>();
 
             values.put(ReplaceType.PLAYER_NAME, invited);
             values.put(ReplaceType.HOME_NAME, homeName);
 
-            sender.sendMessage(MessageManager.getTranslatedMessageWithReplace(plugin, "invitedToHome", values));
+            initiator.sendMessage(MessageManager.getTranslatedMessageWithReplace(plugin, "toInvited", values));
 
             values.put(ReplaceType.PLAYER_NAME, inviter);
-
-            Bukkit.getPlayer(invited).sendMessage(MessageManager.getTranslatedMessageWithReplace(plugin, "invitePlayer", values));
+            invitedToHome.sendMessage(MessageManager.getTranslatedMessageWithReplace(plugin, "toInviter", values));
         }
     }
 }
