@@ -78,6 +78,12 @@ public class HandleDataFiles implements HandleData {
 
             homes = new JsonObject();
 
+            for (Map.Entry<String, JsonElement> entry : owner.get("homes").getAsJsonObject().entrySet()) {
+                homes.add(entry.getKey(), entry.getValue());
+            }
+
+            owner.remove("homes");
+
             for (Map.Entry<String, JsonElement> entry : owner.entrySet()) {
                 homes.add(entry.getKey(), entry.getValue());
             }
@@ -85,16 +91,18 @@ public class HandleDataFiles implements HandleData {
         } else {
             owner = new JsonObject();
             homes = new JsonObject();
+
+            owner.addProperty("ownerName", home.getOwnerName());
         }
 
         homes.add(home.getHomeName(), locationToJsonObject(home.getLocation()));
         homes.addProperty("id", home.getId());
 
+        homes.remove("ownerName");
+
         owner.remove("homes");
-        owner.addProperty("ownerName", home.getOwnerName());
         owner.add("homes", homes);
 
-        jsonObject.remove(home.getOwnerUuid().toString());
         jsonObject.add(home.getOwnerUuid().toString(), owner);
 
 

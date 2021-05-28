@@ -26,20 +26,26 @@ public class SetHome implements CommandExecutor {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             if (args.length == 1 && args[0] != null) {
-                if (canCreateHome(player, args[0])) {
-                    Location location = player.getLocation();
-
-                    plugin.getDataHandler().getHandleData().saveHome(new Home(plugin.getDataHandler().getHandleData().getLatestIdOfHomes() + 1, player.getUniqueId(), player.getDisplayName(), args[0], location));
-
-                    sendMessage(sender, args[0], "homeCreated");
-                } else {
-                    sendMessage(sender, args[0], "homeNotCreated");
-                }
+                extracted(sender, args[0], player);
+            } else if (args.length == 0) {
+                extracted(sender, "home", player);
             } else {
                 sender.sendMessage(MessageManager.getTranslatedMessage(plugin, "wrongAmountOfArguments"));
             }
         }
         return true;
+    }
+
+    private void extracted(CommandSender sender, String homeName, Player player) {
+        if (canCreateHome(player, homeName)) {
+            Location location = player.getLocation();
+
+            plugin.getDataHandler().getHandleData().saveHome(new Home(plugin.getDataHandler().getHandleData().getLatestIdOfHomes() + 1, player.getUniqueId(), player.getDisplayName(), homeName, location));
+
+            sendMessage(sender, homeName, "homeCreated");
+        } else {
+            sendMessage(sender, homeName, "homeNotCreated");
+        }
     }
 
     private boolean canCreateHome(Player player, String homeName) {
