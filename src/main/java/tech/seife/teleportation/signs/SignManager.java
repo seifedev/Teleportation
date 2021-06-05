@@ -20,17 +20,10 @@ public final class SignManager {
         signSet.add(new Sign(id, signLocation, teleportLocation));
     }
 
-    public Sign getSign(Location signLocation) {
-        return signSet.stream()
-                .filter(sign -> sign.getSignLocation().equals(signLocation))
-                .findFirst()
-                .orElse(null);
-    }
-
     public boolean isValidSign(String[] lines) {
         if (lines[0] != null && lines[0].equalsIgnoreCase("[Teleportation]")) {
             if (lines[1] != null && lines[1].equalsIgnoreCase("warp")) {
-                return lines[3] != null && warpManager.getWarp(lines[3]) != null;
+                return lines[2] != null && warpManager.getWarp(lines[2]) != null;
             }
         }
         return false;

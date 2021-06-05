@@ -32,7 +32,7 @@ public class OnPlayerInteractEvent implements Listener {
                 Sign sign = (Sign) e.getClickedBlock().getState();
 
                 if (plugin.getSignManager().isValidSign(sign.getLines())) {
-                    e.getPlayer().teleport(plugin.getWarpManager().getWarp(sign.getLine(3)).getLocation());
+                    e.getPlayer().teleport(plugin.getWarpManager().getWarp(sign.getLine(2)).getLocation());
                 }
             }
         }

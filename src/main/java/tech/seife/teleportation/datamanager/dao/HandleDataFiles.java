@@ -132,21 +132,29 @@ public class HandleDataFiles implements HandleData {
     @Override
     public int getLatestIdOfHomes() {
         JsonObject jsonObject = gson.fromJson(gson.toJson(plugin.getFileManager().getHomeFile()), JsonObject.class);
-        return Math.max(jsonObject.size(), 1);
+        return Math.max(jsonObject.size(), 0);
     }
 
     @Override
     public List<String> getHomeNamesOfPlayer(UUID playerUuid) {
         JsonObject jsonObject = gson.fromJson(gson.toJson(plugin.getFileManager().getHomeFile()), JsonObject.class);
 
+        if (jsonObject.get(playerUuid.toString()).getAsJsonObject() == null) {
+            return null;
+        }
+
         List<String> homeNames = new ArrayList<>();
-        for (Map.Entry<String, JsonElement> ids : jsonObject.entrySet()) {
-            for (Map.Entry<String, JsonElement> details : ids.getValue().getAsJsonObject().entrySet()) {
-                if (details.getValue().getAsJsonObject().get("ownerUuid").equals(playerUuid)) {
-                    homeNames.add(details.getValue().getAsJsonObject().get("homeName").getAsString());
+
+        for (Map.Entry<String, JsonElement> items : jsonObject.get(playerUuid.toString()).getAsJsonObject().entrySet()) {
+            if (items.getKey().equalsIgnoreCase("homes")) {
+                JsonObject subSection = items.getValue().getAsJsonObject();
+
+                for (Map.Entry<String, JsonElement> home : subSection.entrySet()) {
+                    homeNames.add(home.getKey());
                 }
             }
         }
+
         return homeNames;
     }
 
@@ -240,13 +248,26 @@ public class HandleDataFiles implements HandleData {
         JsonObject jsonObject = gson.fromJson(gson.toJson(plugin.getFileManager().getWarpFile()), JsonObject.class);
 
         if (jsonObject.get(String.valueOf(warp.getId())) != null) {
-            JsonObject id = new JsonObject();
+            JsonObject id = jsonObject.getAsJsonObject(String.valueOf(warp.getId()));
 
-            id.addProperty("name", warp.getName());
+            id.remove("id");
+            id.addProperty("id", warp.getId() + 1);
+
+            id.remove("location");
             id.add("location", locationToJsonObject(warp.getLocation()));
 
-            plugin.getFileManager().saveWarpFile(gson.fromJson(jsonObject, Map.class));
+            jsonObject.remove(warp.getName());
+            jsonObject.add(warp.getName(), id);
+
+        } else {
+            JsonObject id = new JsonObject();
+
+            id.addProperty("id", warp.getId() + 1);
+            id.add("location", locationToJsonObject(warp.getLocation()));
+
+            jsonObject.add(warp.getName(), id);
         }
+        plugin.getFileManager().saveWarpFile(gson.fromJson(jsonObject, Map.class));
     }
 
     @Override
@@ -255,15 +276,18 @@ public class HandleDataFiles implements HandleData {
 
         WarpManager warpManager = plugin.getWarpManager();
 
-        jsonObject.entrySet().forEach(entry -> warpManager.addWarp(entry.getValue().getAsJsonObject().get("name").getAsString(), getLocationFromJsonObj(entry.getValue().getAsJsonObject().get("location").getAsJsonObject())));
+        for (Map.Entry<String, JsonElement> warps : jsonObject.entrySet()) {
+            JsonObject details = warps.getValue().getAsJsonObject();
+            warpManager.addWarp(new Warp(details.get("id").getAsInt(), warps.getKey(), getLocationFromJsonObj(details.getAsJsonObject("location"))));
+        }
     }
 
     @Override
     public void removeWarp(Warp warp) {
         JsonObject jsonObject = gson.fromJson(gson.toJson(plugin.getFileManager().getWarpFile()), JsonObject.class);
 
-        if (jsonObject.get(String.valueOf(warp.getId())) != null) {
-            jsonObject.remove(String.valueOf(warp.getId()));
+        if (jsonObject.get(String.valueOf(warp.getName())) != null) {
+            jsonObject.remove(String.valueOf(warp.getName()));
             plugin.getFileManager().saveWarpFile(gson.fromJson(jsonObject, Map.class));
         }
 
@@ -307,6 +331,8 @@ public class HandleDataFiles implements HandleData {
 
             details.add("signLocation", locationToJsonObject(sign.getSignLocation()));
             details.add("locationToTeleport", locationToJsonObject(sign.getLocationToTeleport()));
+
+            jsonObject.add(String.valueOf(sign.getId()), details);
 
             plugin.getFileManager().saveSignFile(gson.fromJson(jsonObject, Map.class));
 
