@@ -48,7 +48,7 @@ public class DeleteWarp implements CommandExecutor {
     }
 
     private void sendVerificationProcess(Player warpDeleter) {
-        plugin.getDataHolder().getDeleteWarpsVerification().put(warpDeleter.getUniqueId(), false);
+        plugin.getDataHolder().setDeleteWarpsVerification(warpDeleter.getUniqueId(), false);
         VerifyInventory verifyInventory = new VerifyInventory(warpDeleter);
         verifyInventory.openInventory(warpDeleter);
     }

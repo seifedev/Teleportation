@@ -19,14 +19,7 @@ public class OnPlayerDeathEvent implements Listener {
     @EventHandler
     public void onPlayerDeathEvent(PlayerDeathEvent e) {
         if (dataHolder.getReturnLocations().get(e.getEntity().getUniqueId()) != null) {
-            LinkedHashSet<Location> locations = dataHolder.getReturnLocations().get(e.getEntity().getUniqueId());
-
-            locations.add(e.getEntity().getLocation());
-        } else {
-            LinkedHashSet<Location> locations = new LinkedHashSet<>();
-            locations.add(e.getEntity().getLocation());
-
-            dataHolder.getReturnLocations().put(e.getEntity().getUniqueId(), locations);
+            dataHolder.setReturnLocations(e.getEntity().getUniqueId(), e.getEntity().getLocation());
         }
     }
 }

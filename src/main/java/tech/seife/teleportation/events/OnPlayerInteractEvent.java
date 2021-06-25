@@ -25,7 +25,7 @@ public class OnPlayerInteractEvent implements Listener {
             if (e.getItem() != null && verifySelectorBlock(e.getItem())) {
                 Long randomId = (long) (Math.random() * 3000L) + 1L;
 
-                plugin.getDataHolder().getGeneratedIdForWarps().put(randomId, e.getClickedBlock().getLocation());
+                plugin.getDataHolder().setGeneratedIdForWarps(randomId, e.getClickedBlock().getLocation());
 
                 e.getPlayer().sendMessage("the id of the clicked block is: " + randomId);
             } else if (e.getClickedBlock().getState() instanceof Sign) {

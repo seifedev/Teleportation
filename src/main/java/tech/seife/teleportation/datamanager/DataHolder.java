@@ -8,10 +8,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public final class DataHolder {
 
-    private final Map<UUID, Map<UUID, Integer>> teleportRequest;
     private final Map<UUID, LinkedHashSet<Location>> returnLocations;
     private final Map<UUID, Boolean> deleteWarpsVerification;
     private final Map<Long, Location> generatedIdForWarps;
@@ -20,7 +20,6 @@ public final class DataHolder {
     private Location spawnLocation;
 
     public DataHolder(Teleportation plugin) {
-        teleportRequest = new HashMap<>();
         returnLocations = new HashMap<>();
         deleteWarpsVerification = new HashMap<>();
         generatedIdForWarps = new HashMap<>();
@@ -34,28 +33,59 @@ public final class DataHolder {
     }
 
     public Location getSpawnLocation() {
-        return spawnLocation;
+        return spawnLocation.clone();
     }
 
     public void setSpawnLocation(Location spawnLocation) {
+        if (spawnLocation == null) {
+            this.spawnLocation = getDefaultWorld(0);
+        }
         this.spawnLocation = spawnLocation;
     }
 
     public Map<Long, Location> getGeneratedIdForWarps() {
-        return generatedIdForWarps;
+        return Map.copyOf(generatedIdForWarps);
     }
 
-    public Map<UUID, Map<UUID, Integer>> getTeleportRequest() {
-        return teleportRequest;
+    public void setGeneratedIdForWarps(long id, Location location) {
+        if (location != null) {
+            generatedIdForWarps.put(id, location);
+        } else {
+            generatedIdForWarps.put(id, getDefaultWorld(100));
+        }
     }
+
 
     public Map<UUID, LinkedHashSet<Location>> getReturnLocations() {
-        return returnLocations;
+        return Map.copyOf(returnLocations);
     }
 
-    public Map<UUID, Boolean> getDeleteWarpsVerification() {
-        return deleteWarpsVerification;
+    public void setReturnLocations(UUID playerUuid, Location location) {
+        if (playerUuid != null) {
+            LinkedHashSet<Location> locations;
+            if (returnLocations.get(playerUuid) != null) {
+                locations = returnLocations.get(playerUuid);
+            } else {
+                locations = new LinkedHashSet<>();
+            }
+
+            if (location != null) {
+                locations.add(location);
+            } else {
+                locations.add(getDefaultWorld(100));
+            }
+        }
     }
+
+
+    public Map<UUID, Boolean> getDeleteWarpsVerification() {
+        return Map.copyOf(deleteWarpsVerification);
+    }
+
+    public void setDeleteWarpsVerification(UUID playerUuid, Boolean signal) {
+        deleteWarpsVerification.put(playerUuid, signal);
+    }
+
 
     public BukkitTask getTasks() {
         return task;
@@ -77,4 +107,9 @@ public final class DataHolder {
             }
         }
     }
+
+    private Location getDefaultWorld(int i) {
+        return new Location(Bukkit.getWorlds().get(0), 0, 100, i);
+    }
+
 }

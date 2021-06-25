@@ -19,9 +19,9 @@ public final class OnInventoryClickEvent implements Listener {
             e.setCancelled(true);
 
             if (e.getCurrentItem().getItemMeta() != null && e.getCurrentItem().getItemMeta().getDisplayName().equals("Agree")) {
-                dataHolder.getDeleteWarpsVerification().put(e.getWhoClicked().getUniqueId(), true);
+                dataHolder.setDeleteWarpsVerification(e.getWhoClicked().getUniqueId(), true);
             } else if (e.getCurrentItem().getItemMeta() != null && e.getCurrentItem().getItemMeta().getDisplayName().equals("Disagree")) {
-                dataHolder.getDeleteWarpsVerification().put(e.getWhoClicked().getUniqueId(), false);
+                dataHolder.setDeleteWarpsVerification(e.getWhoClicked().getUniqueId(), false);
             }
             e.getWhoClicked().closeInventory();
         }

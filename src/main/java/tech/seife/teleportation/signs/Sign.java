@@ -4,7 +4,7 @@ import org.bukkit.Location;
 
 public final class Sign {
 
-    private final Location signLocation;
+    private Location signLocation;
     private final Location locationToTeleport;
     private final int id;
 

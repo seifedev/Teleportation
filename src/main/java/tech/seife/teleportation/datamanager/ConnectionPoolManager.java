@@ -11,7 +11,6 @@ import java.sql.SQLException;
 public class ConnectionPoolManager {
 
     private final Configuration config;
-    public Connection connection;
     private HikariDataSource dataSource;
     private String hostname;
     private String port;
